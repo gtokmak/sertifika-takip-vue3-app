@@ -1,19 +1,51 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import GirisView from '../views/GirisView.vue'
+import ProfilView from '../views/ProfilView.vue'
+import  SertifikaListesiView  from "../views/SertifikaListesiView.vue"
+import  SertifikaEkleView  from "@/views/SertifikaEkleView.vue";
+import  SertifikaInceleView  from "@/views/SertifikaInceleView.vue";
 
+import { auth } from '@/firebase/config'
+
+const authKontrol =(to, from,next)=>{
+  const kullanici = auth.currentUser
+  if (!kullanici) {
+    next({name:'giris'})
+  } else {
+    next()
+  }
+}
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },{
+    path: '/giris',
+    name: 'giris',
+    component: GirisView
+  },{
+    path: '/profil',
+    name: 'profil',
+    component: ProfilView,
+    beforeEnter:authKontrol
+  },{
+    path: '/liste',
+    name: 'liste',
+    component: SertifikaListesiView,
+    beforeEnter:authKontrol
+  },{
+    path: '/ekle',
+    name: 'ekle',
+    component: SertifikaEkleView,
+    beforeEnter:authKontrol
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/incele/:id',
+    name: 'incele',
+    component: SertifikaInceleView,
+    beforeEnter:authKontrol
   }
 ]
 
